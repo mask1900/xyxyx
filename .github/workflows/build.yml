@@ -1,10 +1,5 @@
 name: Build Android APK
 
-# Her main/master push'unda ve istenirse elle (Actions sekmesinden
-# "Run workflow") calisir. Cikan .apk/.aab dosyalari "Artifacts"
-# bolumunden indirilebilir; ikisi de GERCEKTEN IMZASIZDIR (bkz.
-# android/app/build.gradle) - Play Store'a yuklemeden veya telefona
-# kurmadan once kendi keystore'unla imzalaman gerekir (bkz. SIGNING_CMD.md).
 on:
   push:
     branches: [main, master]
