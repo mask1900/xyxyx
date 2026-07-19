@@ -1,6 +1,0 @@
-# Bu Podfile, FlutLab gibi yukleyicilerin "ios/" klasorunu bulabilmesi
-# icin minimal bir yer tutucudur. Bu proje sadece Android'de calistirilmak
-# uzere hazirlanmistir; gercek bir iOS derlemesi icin projeyi
-# `flutter create --platforms=ios .` ile tam bir Xcode iskeletiyle
-# yeniden olusturmaniz gerekir.
-platform :ios, '12.0'
