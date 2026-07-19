@@ -1,0 +1,66 @@
+name: Build Android APK
+
+# Her main/master push'unda ve istenirse elle (Actions sekmesinden
+# "Run workflow") calisir. Cikan .apk/.aab dosyalari "Artifacts"
+# bolumunden indirilebilir; ikisi de GERCEKTEN IMZASIZDIR (bkz.
+# android/app/build.gradle) - Play Store'a yuklemeden veya telefona
+# kurmadan once kendi keystore'unla imzalaman gerekir (bkz. SIGNING_CMD.md).
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch: {}
+
+jobs:
+  build-apk:
+    name: Build unsigned release APK + AAB
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run analyzer
+        run: flutter analyze
+        continue-on-error: true
+
+      - name: Run unit tests
+        run: flutter test
+        continue-on-error: true
+
+      - name: Build unsigned release APK (telefona kurup denemek icin)
+        run: flutter build apk --release
+
+      - name: Build unsigned release AAB (Play Store icin)
+        run: flutter build appbundle --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: astrofelyx-pro-unsigned-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: astrofelyx-pro-unsigned-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+          if-no-files-found: warn
+          retention-days: 14
